@@ -1,0 +1,24 @@
+import { knex } from 'knex';
+import type { Knex } from 'knex';
+import type { DatabaseConfig } from '@infrastructure/config/env';
+
+/** MySQL connection pool (mysql2 driver). DATETIME values are read and written in UTC. */
+export const createDatabase = (config: DatabaseConfig): Knex =>
+  knex({
+    client: 'mysql2',
+    connection: {
+      host: config.host,
+      port: config.port,
+      user: config.user,
+      password: config.password,
+      database: config.name,
+      charset: 'utf8mb4',
+      timezone: 'Z',
+      decimalNumbers: true,
+    },
+    pool: { min: config.pool.min, max: config.pool.max },
+  });
+
+export const pingDatabase = async (db: Knex): Promise<void> => {
+  await db.raw('SELECT 1');
+};
