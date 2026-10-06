@@ -114,6 +114,42 @@ flowchart TB
 
 ---
 
+## 🖥️ Visual Comparison — React Frontend
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/frontend-dark.png">
+  <img alt="Side-by-side comparison: legacy REST downloads 540 KB (9.0 MB of JSON) for 1,000 users, the BFF 943 B and GraphQL 1.1 KB for the 20 rows the card renders" src="docs/images/frontend-light.png">
+</picture>
+
+`frontend/` is a Vite + React 19 + Apollo Client 4 SPA that measures the three approaches **from
+the browser**, not from the server:
+
+- **Side by side** — page 1 of each approach, called 3× sequentially (median time). Bytes on the
+  wire come from the Resource Timing API (`encodedBodySize`) together with the `Content-Encoding`
+  the backend chose; the SQL query count comes from the `X-DB-Query-Count` header.
+- **Three tabs** (Legacy REST · BFF REST · GraphQL) — each shows response time, payload size,
+  number of records and the 3 fields the card actually renders (name, score, avatar). The legacy
+  tab ranks 1,000 users in the browser; the BFF tab pages with `page`/`size` (offset); the GraphQL
+  tab uses Apollo's `relayStylePagination` and sends `after: endCursor` on "Load more".
+- **Same origin** — nginx (Docker) or the Vite dev server proxies `/api`, `/graphql` and `/health`
+  to the backend, so the browser can read those headers and sizes without CORS.
+
+Measured in Chromium on `localhost` (brotli):
+
+| | Records | JSON to parse | On the wire | SQL queries |
+|---|---:|---:|---:|---:|
+| **Legacy REST** | 1,000 | 9.0 MB | 540 KB | 6 |
+| **BFF REST** | 20 | 2.6 KB | 943 B | 2 |
+| **GraphQL (Apollo Client)** | 20 | 4.0 KB | 1.1 KB | 1 |
+
+> GraphQL is 4.0 KB here versus 2.8 KB in the server-side benchmark because Apollo Client adds
+> `__typename` to every selection set for its normalized cache. Browsers only offer brotli over
+> HTTPS and on `localhost`; reached through another host name, the backend falls back to gzip
+> (2.6 MB for the legacy payload). The orderings match: BFF page 2 equals ranks 21–40 of the
+> legacy list ranked in the browser, and GraphQL "Load more" returns the same top 40 as the BFF.
+
+---
+
 ## 🧬 N+1 Prevention with DataLoader
 
 A nested query such as `user(id) { enrollments { course { instructor modules } } }` would naively
@@ -261,6 +297,12 @@ src/
     ├── http/                  # Express 5 controllers, routes, middlewares (query metrics, errors)
     ├── graphql/               # Apollo Server 5 schema, resolvers, context, depth-limit rule
     └── compare/               # Payload comparison sources
+
+frontend/                      # Vite + React 19 + Apollo Client 4 comparison SPA
+├── src/lib/                   # measuredFetch (Resource Timing), endpoints, Apollo client, comparison runner
+├── src/hooks/                 # One hook per approach (legacy, BFF offset, GraphQL cursor)
+├── src/components/            # Side-by-side bars, tabs, metric cards, leaderboard, avatar
+└── nginx/                     # Production server: SPA + same-origin proxy to the backend
 ```
 
 ### Architectural Decisions (ADRs)
@@ -318,7 +360,22 @@ npm run build          # Clean compilation into dist/
 - Docker & Docker Compose
 - Node.js >= 22.22 (tested with Node 24)
 
-### 2. Quick Start
+### 2. Quick Start — the whole stack in Docker
+
+```bash
+docker-compose up -d --build
+```
+
+On the first start the backend migrates and seeds the dataset (skipped when data already exists),
+then the frontend starts once the backend is healthy:
+
+- **Frontend:** http://localhost:5173
+- **API:** http://localhost:3000 (endpoints below)
+
+Host ports can be changed with `MYSQL_HOST_PORT`, `BACKEND_HOST_PORT` and `FRONTEND_HOST_PORT` in a
+`.env` file next to `docker-compose.yml`.
+
+### 3. Local development
 
 ```bash
 # 1. Start the MySQL database container
@@ -336,17 +393,17 @@ npm run benchmark
 # 4. Start the API in development mode
 npm run dev
 
-# 5. Explore the endpoints:
+# 5. Start the frontend (proxies to BACKEND_URL, default http://localhost:3000)
+cd frontend && npm install && npm run dev
+
+# 6. Explore the endpoints:
+# Frontend:       http://localhost:5173
 # REST Legacy:    http://localhost:3000/api/v1/dashboard
 # REST BFF:       http://localhost:3000/api/v2/dashboard?page=1&size=20
 # Comparison API: http://localhost:3000/api/compare
 # GraphQL API:    http://localhost:3000/graphql   (Apollo Sandbox in development)
 # Health check:   http://localhost:3000/health
 ```
-
-> ⚠️ The mini React comparison SPA (`frontend/`, SPEC requirement) is not committed yet, so the
-> `frontend` service of `docker-compose.yml` cannot be built. Until it lands, start the stack with
-> `docker-compose up -d mysql backend`.
 
 ---
 
