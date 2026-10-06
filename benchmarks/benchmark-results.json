@@ -1,0 +1,73 @@
+{
+  "measuredAt": "2026-10-06T01:41:32.353Z",
+  "runs": 5,
+  "baseline": "v1-legacy",
+  "approaches": [
+    {
+      "id": "v1-legacy",
+      "label": "REST Legacy (v1)",
+      "request": "GET /api/v1/dashboard",
+      "records": 1000,
+      "dbQueries": 6,
+      "timeMs": {
+        "median": 54.4,
+        "min": 39.2,
+        "max": 182.5
+      },
+      "bytes": {
+        "raw": 9428641,
+        "gzip": 2699396,
+        "brotli": 552981
+      },
+      "reductionVsBaseline": {
+        "raw": 1,
+        "gzip": 1,
+        "brotli": 1
+      }
+    },
+    {
+      "id": "v2-bff",
+      "label": "REST BFF (v2)",
+      "request": "GET /api/v2/dashboard?page=1&size=20",
+      "records": 20,
+      "dbQueries": 2,
+      "timeMs": {
+        "median": 5.6,
+        "min": 4.8,
+        "max": 16.6
+      },
+      "bytes": {
+        "raw": 2662,
+        "gzip": 974,
+        "brotli": 943
+      },
+      "reductionVsBaseline": {
+        "raw": 3541.9,
+        "gzip": 2771.5,
+        "brotli": 586.4
+      }
+    },
+    {
+      "id": "v3-graphql",
+      "label": "GraphQL (v3)",
+      "request": "POST /graphql query Dashboard($pageSize: Int, $after: String) { dashboard(pageSize: $pageSize, after: $after) { edges { node { id name totalScore avatarUrl } } pageInfo { hasNextPage endCursor } } }",
+      "records": 20,
+      "dbQueries": 1,
+      "timeMs": {
+        "median": 6.1,
+        "min": 5.6,
+        "max": 13.7
+      },
+      "bytes": {
+        "raw": 2902,
+        "gzip": 1056,
+        "brotli": 1025
+      },
+      "reductionVsBaseline": {
+        "raw": 3249,
+        "gzip": 2556.2,
+        "brotli": 539.5
+      }
+    }
+  ]
+}
