@@ -65,17 +65,15 @@ export const toLegacyDashboard = (users: readonly User[]): LegacyDashboardOutput
 
   return {
     total: users.length,
-    users: users.map(
-      (user): LegacyUserDTO => ({
-        id: user.id,
-        name: user.name.value,
-        email: user.email.value,
-        avatarUrl: user.avatarUrl.value,
-        bio: user.bio,
-        createdAt: user.createdAt.toISOString(),
-        enrollments: user.enrollments.map(toEnrollmentDTO),
-        certificates: user.certificates.map(toCertificateDTO),
-      }),
-    ),
+    users: users.map((user): LegacyUserDTO => ({
+      id: user.id,
+      name: user.name.value,
+      email: user.email.value,
+      avatarUrl: user.avatarUrl.value,
+      bio: user.bio,
+      createdAt: user.createdAt.toISOString(),
+      enrollments: user.enrollments.map(toEnrollmentDTO),
+      certificates: user.certificates.map(toCertificateDTO),
+    })),
   };
 };

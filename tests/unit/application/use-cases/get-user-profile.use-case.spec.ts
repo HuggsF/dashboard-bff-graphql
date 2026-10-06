@@ -21,10 +21,9 @@ describe('GetUserProfileUseCase', () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(userRepository.findAllProjected).toHaveBeenCalledWith(
-        ['name', 'avatarUrl'],
-        { ids: ['01990001-0000-7000-8000-000000000001'] },
-      );
+      expect(userRepository.findAllProjected).toHaveBeenCalledWith(['name', 'avatarUrl'], {
+        ids: ['01990001-0000-7000-8000-000000000001'],
+      });
       expect(result.data).toEqual(sampleProfile);
     }
   });

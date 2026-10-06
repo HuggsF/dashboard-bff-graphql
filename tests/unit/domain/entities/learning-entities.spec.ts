@@ -85,16 +85,16 @@ describe('Course', () => {
 
   it('collects every violation', () => {
     const result = Course.create(
-      courseProps({ id: '', name: 'C', description: 'd'.repeat(5001), category: '', durationHours: 0 }),
+      courseProps({
+        id: '',
+        name: 'C',
+        description: 'd'.repeat(5001),
+        category: '',
+        durationHours: 0,
+      }),
     );
 
-    expect(fieldsOf(result)).toEqual([
-      'id',
-      'name',
-      'description',
-      'category',
-      'durationHours',
-    ]);
+    expect(fieldsOf(result)).toEqual(['id', 'name', 'description', 'category', 'durationHours']);
     expect(!result.success && result.error.violations[2]?.message).toBe(
       'description must be at most 5000 characters',
     );

@@ -5,7 +5,9 @@ import { compareQuerySchema } from '@presentation/http/schemas/dashboard.schemas
 import { validate } from '@presentation/http/schemas/validate';
 
 export class CompareController {
-  constructor(private readonly compareResponseSizes: Pick<CompareResponseSizesUseCase, 'execute'>) {}
+  constructor(
+    private readonly compareResponseSizes: Pick<CompareResponseSizesUseCase, 'execute'>,
+  ) {}
 
   /** GET /api/compare?runs=3 — payload bytes (raw/gzip/brotli), time and SQL queries per approach. */
   compare = async (request: Request, response: Response): Promise<void> => {

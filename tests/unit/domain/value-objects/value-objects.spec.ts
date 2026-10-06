@@ -71,18 +71,21 @@ describe('AvatarUrl', () => {
     expect(result.success && result.data.toString()).toBe('');
   });
 
-  it.each(['javascript:alert(1)', 'data:image/png;base64,AAAA', '/avatar.png', 'ftp://x.org/a', 'https://exa mple.com'])(
-    'rejects %s',
-    (raw) => {
-      const result = AvatarUrl.create(raw);
+  it.each([
+    'javascript:alert(1)',
+    'data:image/png;base64,AAAA',
+    '/avatar.png',
+    'ftp://x.org/a',
+    'https://exa mple.com',
+  ])('rejects %s', (raw) => {
+    const result = AvatarUrl.create(raw);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error).toBeInstanceOf(InvalidAvatarUrlError);
-        expect(result.error.message).toBe('Avatar URL must be an absolute http(s) URL');
-      }
-    },
-  );
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBeInstanceOf(InvalidAvatarUrlError);
+      expect(result.error.message).toBe('Avatar URL must be an absolute http(s) URL');
+    }
+  });
 
   it('rejects URLs longer than 2048 characters', () => {
     const result = AvatarUrl.create(`https://example.com/${'a'.repeat(2048)}`);

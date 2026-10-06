@@ -139,8 +139,7 @@ export const buildResolvers = (dependencies: ResolverDependencies): Resolvers =>
       user: UserProfileDTO,
       _args: unknown,
       context: GraphQLContext,
-    ): Promise<readonly CertificateNodeDTO[]> =>
-      context.loaders.certificatesByUserId.load(user.id),
+    ): Promise<readonly CertificateNodeDTO[]> => context.loaders.certificatesByUserId.load(user.id),
   },
 
   Enrollment: {

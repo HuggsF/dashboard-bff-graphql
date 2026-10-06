@@ -23,9 +23,7 @@ describe('MySqlUserRepository', () => {
     const repo = new MySqlUserRepository(fakeDb);
     const result = await repo.findAllProjected(['name', 'avatarUrl'], { ids: ['u1'] });
 
-    expect(result).toEqual([
-      { id: 'u1', name: 'Ada', avatarUrl: 'https://avatar.png' },
-    ]);
+    expect(result).toEqual([{ id: 'u1', name: 'Ada', avatarUrl: 'https://avatar.png' }]);
   });
 
   it('findById returns null when user row is not found', async () => {

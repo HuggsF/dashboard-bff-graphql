@@ -57,15 +57,13 @@ describe('E2E Endpoints Comparison (Legacy vs BFF vs GraphQL)', () => {
   }));
 
   const mockCheckHealth = {
-    execute: jest.fn().mockResolvedValue(
-      ok({ status: 'ok', uptimeSeconds: 3600, checks: { database: 'up' } }),
-    ),
+    execute: jest
+      .fn()
+      .mockResolvedValue(ok({ status: 'ok', uptimeSeconds: 3600, checks: { database: 'up' } })),
   };
 
   const mockGetDashboardLegacy = {
-    execute: jest.fn().mockResolvedValue(
-      ok({ total: 50, users: legacyUsers }),
-    ),
+    execute: jest.fn().mockResolvedValue(ok({ total: 50, users: legacyUsers })),
   };
 
   const mockGetDashboardBFF = {

@@ -37,7 +37,9 @@ export class MySqlUserRepository implements UserRepository {
    */
   async findAll(): Promise<User[]> {
     const [users, enrollments, certificates, courses, instructors, modules] = await Promise.all([
-      this.db<UserRow>(TABLES.users).select('*').orderBy([{ column: 'created_at' }, { column: 'id' }]),
+      this.db<UserRow>(TABLES.users)
+        .select('*')
+        .orderBy([{ column: 'created_at' }, { column: 'id' }]),
       this.db<EnrollmentRow>(TABLES.enrollments)
         .select('*')
         .orderBy([{ column: 'started_at' }, { column: 'id' }]),
@@ -91,7 +93,9 @@ export class MySqlUserRepository implements UserRepository {
     ]);
     const courseIds = unique(enrollments.map((enrollment) => enrollment.course_id));
     const courses =
-      courseIds.length === 0 ? [] : await this.db<CourseRow>(TABLES.courses).whereIn('id', courseIds);
+      courseIds.length === 0
+        ? []
+        : await this.db<CourseRow>(TABLES.courses).whereIn('id', courseIds);
     const instructorIds = unique(courses.map((course) => course.instructor_id));
     const [instructors, modules] =
       courseIds.length === 0

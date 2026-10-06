@@ -93,7 +93,11 @@ describe('HTTP Middlewares', () => {
     it('logs completed request details on finish event', () => {
       const logger = createLoggerMock();
       const middleware = requestLogger(logger);
-      const req = { method: 'GET', originalUrl: '/api/v1/dashboard', path: '/api/v1/dashboard' } as Request;
+      const req = {
+        method: 'GET',
+        originalUrl: '/api/v1/dashboard',
+        path: '/api/v1/dashboard',
+      } as Request;
       const resEmitter = new EventEmitter();
       (resEmitter as any).statusCode = 200;
       const next = jest.fn();

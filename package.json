@@ -22,8 +22,8 @@
     "test:e2e": "jest --selectProjects e2e",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/ tests/ scripts/ --max-warnings 0",
-    "format": "prettier --write \"{src,tests,scripts}/**/*.ts\" \"frontend/src/**/*.{ts,tsx,css}\" \"frontend/*.ts\"",
-    "format:check": "prettier --check \"{src,tests,scripts}/**/*.ts\" \"frontend/src/**/*.{ts,tsx,css}\" \"frontend/*.ts\"",
+    "format": "prettier --write --no-error-on-unmatched-pattern \"{src,tests,scripts}/**/*.ts\" \"frontend/src/**/*.{ts,tsx,css}\" \"frontend/*.ts\"",
+    "format:check": "prettier --check --no-error-on-unmatched-pattern \"{src,tests,scripts}/**/*.ts\" \"frontend/src/**/*.{ts,tsx,css}\" \"frontend/*.ts\"",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"

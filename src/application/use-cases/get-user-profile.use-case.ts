@@ -23,7 +23,9 @@ export const USER_PROFILE_FIELDS = [
 export class GetUserProfileUseCase {
   constructor(private readonly userRepository: Pick<UserRepository, 'findAllProjected'>) {}
 
-  async execute(input: GetUserProfileInput): Promise<Result<UserProfileDTO | null, UnexpectedError>> {
+  async execute(
+    input: GetUserProfileInput,
+  ): Promise<Result<UserProfileDTO | null, UnexpectedError>> {
     const id = input.id.trim();
     if (id.length === 0 || id.length > ID_MAX_LENGTH) {
       return ok(null);

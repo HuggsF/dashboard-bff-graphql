@@ -92,7 +92,9 @@ describe('User', () => {
       }),
     );
 
-    expect(!result.success && result.error.violations.map((violation) => violation.message)).toEqual([
+    expect(
+      !result.success && result.error.violations.map((violation) => violation.message),
+    ).toEqual([
       'Every enrollment must belong to the user',
       'Every certificate must belong to the user',
     ]);

@@ -15,7 +15,9 @@ describe('GraphQL Cursor', () => {
   it('returns null for malformed or forged cursors', () => {
     expect(decodeCursor('not-valid-base64-!@#$')).toBeNull();
     expect(decodeCursor(Buffer.from('otherprefix:1:2').toString('base64url'))).toBeNull();
-    expect(decodeCursor(Buffer.from('dashboard:v1:notanumber:id123').toString('base64url'))).toBeNull();
+    expect(
+      decodeCursor(Buffer.from('dashboard:v1:notanumber:id123').toString('base64url')),
+    ).toBeNull();
     expect(decodeCursor(Buffer.from('dashboard:v1:100:').toString('base64url'))).toBeNull();
     expect(decodeCursor(Buffer.from('dashboard:v1::id123').toString('base64url'))).toBeNull();
     expect(decodeCursor(Buffer.from('dashboard:v1:no-separator').toString('base64url'))).toBeNull();

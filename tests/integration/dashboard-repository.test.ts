@@ -86,7 +86,8 @@ describe('Dashboard Repository Integration (SQL Projection vs Full Query)', () =
     it('findAllProjected generates SELECT with only specified columns', () => {
       const repo = new MySqlUserRepository(db);
 
-      const query = (repo as any).db('users')
+      const query = (repo as any)
+        .db('users')
         .select(['id', 'name', 'avatar_url'])
         .whereIn('id', ['id1', 'id2']);
       const sql = query.toSQL().toNative();

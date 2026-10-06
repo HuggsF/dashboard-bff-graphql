@@ -22,11 +22,7 @@ describe('MySqlDashboardRepository Unit', () => {
     fakeDb.raw = (str: string) => str;
 
     const repo = new MySqlDashboardRepository(fakeDb);
-    const result = await repo.getDashboardSummary(1, 10, [
-      'name',
-      'avatarUrl',
-      'completedCourses',
-    ]);
+    const result = await repo.getDashboardSummary(1, 10, ['name', 'avatarUrl', 'completedCourses']);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -56,11 +52,7 @@ describe('MySqlDashboardRepository Unit', () => {
     fakeDb.raw = (str: string) => str;
 
     const repo = new MySqlDashboardRepository(fakeDb);
-    const result = await repo.getDashboardSummaryAfter(
-      { totalScore: 150, id: 'u0' },
-      10,
-      ['name'],
-    );
+    const result = await repo.getDashboardSummaryAfter({ totalScore: 150, id: 'u0' }, 10, ['name']);
 
     expect(havingApplied).toBe(true);
     expect(result).toHaveLength(1);

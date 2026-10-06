@@ -72,7 +72,9 @@ export const createPayloadSources = (deps: PayloadSourceDependencies): PayloadSo
       const body = response.body.string;
       const parsed = JSON.parse(body) as GraphQLDashboardBody;
       if (parsed.errors !== undefined && parsed.errors.length > 0) {
-        throw new Error(`GraphQL errors: ${parsed.errors.map((error) => error.message).join('; ')}`);
+        throw new Error(
+          `GraphQL errors: ${parsed.errors.map((error) => error.message).join('; ')}`,
+        );
       }
       return { body, records: parsed.data?.dashboard?.edges?.length ?? 0 };
     },

@@ -1,4 +1,8 @@
-import type { BatchFunction, BatchLoader, BatchLoaderFactory } from '@application/interfaces/batch-loader';
+import type {
+  BatchFunction,
+  BatchLoader,
+  BatchLoaderFactory,
+} from '@application/interfaces/batch-loader';
 import type { Clock } from '@application/interfaces/clock';
 import type { LogContext, Logger } from '@application/interfaces/logger';
 import type { PayloadCompressor, PayloadSizes } from '@application/interfaces/payload-compressor';

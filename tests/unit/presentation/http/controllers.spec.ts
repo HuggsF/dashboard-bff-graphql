@@ -18,9 +18,9 @@ describe('HTTP Controllers', () => {
   describe('HealthController', () => {
     it('responds 200 when health status is ok', async () => {
       const checkHealth = {
-        execute: jest.fn().mockResolvedValue(
-          ok({ status: 'ok', uptimeSeconds: 10, checks: { database: 'up' } }),
-        ),
+        execute: jest
+          .fn()
+          .mockResolvedValue(ok({ status: 'ok', uptimeSeconds: 10, checks: { database: 'up' } })),
       };
       const controller = new HealthController(checkHealth);
       const res = mockResponse();
@@ -28,16 +28,16 @@ describe('HTTP Controllers', () => {
       await controller.check({} as Request, res);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ status: 'ok' }),
-      );
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ status: 'ok' }));
     });
 
     it('responds 503 when health status is degraded', async () => {
       const checkHealth = {
-        execute: jest.fn().mockResolvedValue(
-          ok({ status: 'degraded', uptimeSeconds: 10, checks: { database: 'down' } }),
-        ),
+        execute: jest
+          .fn()
+          .mockResolvedValue(
+            ok({ status: 'degraded', uptimeSeconds: 10, checks: { database: 'down' } }),
+          ),
       };
       const controller = new HealthController(checkHealth);
       const res = mockResponse();
@@ -79,7 +79,10 @@ describe('HTTP Controllers', () => {
       const legacyUseCase = { execute: jest.fn() };
       const bffUseCase = {
         execute: jest.fn().mockResolvedValue(
-          ok({ data: [], pagination: { page: 1, size: 20, totalItems: 0, totalPages: 0, hasNext: false } }),
+          ok({
+            data: [],
+            pagination: { page: 1, size: 20, totalItems: 0, totalPages: 0, hasNext: false },
+          }),
         ),
       };
       const controller = new DashboardController(legacyUseCase, bffUseCase);
@@ -95,7 +98,9 @@ describe('HTTP Controllers', () => {
     it('bff throws HttpError when use case fails', async () => {
       const legacyUseCase = { execute: jest.fn() };
       const bffUseCase = {
-        execute: jest.fn().mockResolvedValue(fail(new InvalidPaginationError('size', 'Invalid size'))),
+        execute: jest
+          .fn()
+          .mockResolvedValue(fail(new InvalidPaginationError('size', 'Invalid size'))),
       };
       const controller = new DashboardController(legacyUseCase, bffUseCase);
       const req = { query: {} } as unknown as Request;
@@ -108,9 +113,11 @@ describe('HTTP Controllers', () => {
   describe('CompareController', () => {
     it('validates runs and returns 200 with no-store cache header', async () => {
       const compareUseCase = {
-        execute: jest.fn().mockResolvedValue(
-          ok({ measuredAt: '2026-01-01', runs: 3, baseline: 'v1', approaches: [] }),
-        ),
+        execute: jest
+          .fn()
+          .mockResolvedValue(
+            ok({ measuredAt: '2026-01-01', runs: 3, baseline: 'v1', approaches: [] }),
+          ),
       };
       const controller = new CompareController(compareUseCase);
       const req = { query: { runs: '3' } } as unknown as Request;

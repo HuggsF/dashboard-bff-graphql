@@ -54,7 +54,9 @@ export class User {
       User.checkOwnership(id, props, violations);
     }
     const courseIds = props.enrollments.map((enrollment) => enrollment.course.id);
-    const duplicatedCourse = courseIds.find((courseId, index) => courseIds.indexOf(courseId) !== index);
+    const duplicatedCourse = courseIds.find(
+      (courseId, index) => courseIds.indexOf(courseId) !== index,
+    );
     if (duplicatedCourse !== undefined) {
       violations.add(
         new InvalidAttributeError(
@@ -103,7 +105,11 @@ export class User {
     return this.id === other.id;
   }
 
-  private static checkOwnership(id: string, props: UserProps, violations: ViolationCollector): void {
+  private static checkOwnership(
+    id: string,
+    props: UserProps,
+    violations: ViolationCollector,
+  ): void {
     const foreignEnrollment = props.enrollments.find((enrollment) => enrollment.userId !== id);
     if (foreignEnrollment !== undefined) {
       violations.add(

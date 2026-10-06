@@ -110,13 +110,31 @@ describe('GraphQL Resolvers', () => {
     const course = await resolvers.Enrollment.course(enrollment as any, {}, context, {} as any);
     expect(course.id).toBe('c1');
 
-    const certificate = { id: 'cert1', courseId: 'c1', issuedAt: '', pdfUrl: '', certificateNumber: '' };
-    const certCourse = await resolvers.Certificate.course(certificate as any, {}, context, {} as any);
+    const certificate = {
+      id: 'cert1',
+      courseId: 'c1',
+      issuedAt: '',
+      pdfUrl: '',
+      certificateNumber: '',
+    };
+    const certCourse = await resolvers.Certificate.course(
+      certificate as any,
+      {},
+      context,
+      {} as any,
+    );
     expect(certCourse.id).toBe('c1');
   });
 
   it('resolves Course instructor and modules relations', async () => {
-    const course = { id: 'c1', name: 'Course 1', instructorId: 'inst1', description: '', category: '', durationHours: 10 };
+    const course = {
+      id: 'c1',
+      name: 'Course 1',
+      instructorId: 'inst1',
+      description: '',
+      category: '',
+      durationHours: 10,
+    };
 
     const instructor = await resolvers.Course.instructor(course, {}, context, {} as any);
     expect(instructor.id).toBe('inst1');
@@ -142,9 +160,7 @@ describe('GraphQL Resolvers', () => {
       getUserProfile: mockGetUserProfile,
     });
     const info = createInfo('{ dashboard { edges { node { name } } } }');
-    await expect(
-      errorResolvers.Query.dashboard({}, {}, context, info),
-    ).rejects.toThrow();
+    await expect(errorResolvers.Query.dashboard({}, {}, context, info)).rejects.toThrow();
   });
 
   it('throws GraphQLError when getUserProfile use case fails', async () => {
@@ -156,9 +172,7 @@ describe('GraphQL Resolvers', () => {
       getUserProfile: failingUseCase,
     });
     const info = createInfo('{ user(id: "u1") { name } }');
-    await expect(
-      errorResolvers.Query.user({}, { id: 'u1' }, context, info),
-    ).rejects.toThrow();
+    await expect(errorResolvers.Query.user({}, { id: 'u1' }, context, info)).rejects.toThrow();
   });
 
   it('throws missingNode when relation node loader returns null', async () => {
@@ -173,7 +187,12 @@ describe('GraphQL Resolvers', () => {
     ).rejects.toThrow('Internal server error');
 
     await expect(
-      resolvers.Course.instructor({ instructorId: 'missing-i' } as any, {}, emptyContext, {} as any),
+      resolvers.Course.instructor(
+        { instructorId: 'missing-i' } as any,
+        {},
+        emptyContext,
+        {} as any,
+      ),
     ).rejects.toThrow('Internal server error');
   });
 });

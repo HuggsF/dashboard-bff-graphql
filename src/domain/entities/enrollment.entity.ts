@@ -43,7 +43,9 @@ export class Enrollment {
     const progress = violations.take(Progress.create(props.progress));
     const startedAt = violations.take(requireDate('startedAt', props.startedAt));
     const completedAt =
-      props.completedAt === null ? null : violations.take(requireDate('completedAt', props.completedAt));
+      props.completedAt === null
+        ? null
+        : violations.take(requireDate('completedAt', props.completedAt));
 
     if (completedAt !== null && startedAt !== null && completedAt < startedAt) {
       violations.add(

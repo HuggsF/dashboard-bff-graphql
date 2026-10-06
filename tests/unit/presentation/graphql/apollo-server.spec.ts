@@ -45,7 +45,11 @@ describe('ApolloServer configuration', () => {
       path: ['dashboard', 'edges'],
       extensions: { code: INTERNAL_SERVER_ERROR },
     };
-    const formatted1 = formatGraphQLError(internalErrorWithPath, new Error('Secret DB failure'), logger);
+    const formatted1 = formatGraphQLError(
+      internalErrorWithPath,
+      new Error('Secret DB failure'),
+      logger,
+    );
     expect(formatted1).toEqual({
       message: 'Internal server error',
       path: ['dashboard', 'edges'],

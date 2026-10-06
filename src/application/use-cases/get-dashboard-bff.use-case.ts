@@ -20,7 +20,10 @@ import { fail, ok } from '@domain/shared/result';
 import type { Result } from '@domain/shared/result';
 
 /** The only columns the dashboard screen needs (id and totalScore always come with an entry). */
-export const BFF_DASHBOARD_FIELDS = ['name', 'avatarUrl'] as const satisfies readonly DashboardField[];
+export const BFF_DASHBOARD_FIELDS = [
+  'name',
+  'avatarUrl',
+] as const satisfies readonly DashboardField[];
 
 /**
  * v2 — Backend For Frontend. The API is shaped by the screen: an SQL projection reads only the
@@ -53,14 +56,12 @@ export class GetDashboardBFFUseCase {
       ]);
       const totalPages = Math.ceil(totalItems / size.data);
       return ok({
-        data: rows.map(
-          (row): DashboardItemDTO => ({
-            id: row.id,
-            name: row.name,
-            totalScore: row.totalScore,
-            avatarUrl: row.avatarUrl,
-          }),
-        ),
+        data: rows.map((row): DashboardItemDTO => ({
+          id: row.id,
+          name: row.name,
+          totalScore: row.totalScore,
+          avatarUrl: row.avatarUrl,
+        })),
         pagination: {
           page: page.data,
           size: size.data,

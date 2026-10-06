@@ -102,10 +102,7 @@ describe('GraphQL Resolvers + DataLoader Integration', () => {
       }
     `;
 
-    const response = await apolloServer.executeOperation(
-      { query },
-      { contextValue: { loaders } },
-    );
+    const response = await apolloServer.executeOperation({ query }, { contextValue: { loaders } });
 
     await apolloServer.stop();
 

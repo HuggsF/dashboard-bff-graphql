@@ -32,7 +32,9 @@ const main = async (): Promise<void> => {
 
   try {
     const applied = await migrateLatest(db);
-    process.stdout.write(`Migrations applied: ${applied.length === 0 ? 'none' : applied.join(', ')}\n`);
+    process.stdout.write(
+      `Migrations applied: ${applied.length === 0 ? 'none' : applied.join(', ')}\n`,
+    );
 
     const [row] = await db(TABLES.users).count<{ total: number | string }[]>({ total: '*' });
     const existing = Number(row?.total ?? 0);

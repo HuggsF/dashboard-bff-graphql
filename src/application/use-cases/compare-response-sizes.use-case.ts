@@ -59,9 +59,7 @@ export class CompareResponseSizesUseCase {
 
   async execute(
     input: CompareResponseSizesInput,
-  ): Promise<
-    Result<CompareResponseSizesOutput, InvalidCompareOptionsError | UnexpectedError>
-  > {
+  ): Promise<Result<CompareResponseSizesOutput, InvalidCompareOptionsError | UnexpectedError>> {
     if (!Number.isInteger(input.runs) || input.runs < 1 || input.runs > this.options.maxRuns) {
       return fail(
         new InvalidCompareOptionsError(

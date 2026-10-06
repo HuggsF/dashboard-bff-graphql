@@ -17,11 +17,7 @@ describe('LearningGraphLoaders', () => {
 
       const result = alignOne(keys, rows, (r) => r.id);
 
-      expect(result).toEqual([
-        { id: 'k1', value: 'one' },
-        null,
-        { id: 'k3', value: 'three' },
-      ]);
+      expect(result).toEqual([{ id: 'k1', value: 'one' }, null, { id: 'k3', value: 'three' }]);
     });
   });
 
@@ -50,9 +46,11 @@ describe('LearningGraphLoaders', () => {
   describe('createLearningGraphLoaders', () => {
     it('creates all five batch loaders and batches calls via reader', async () => {
       const reader: LearningGraphReader = {
-        findEnrollmentsByUserIds: jest.fn().mockResolvedValue([
-          { id: 'e1', userId: 'u1', courseId: 'c1', score: 80, progress: 100 },
-        ]),
+        findEnrollmentsByUserIds: jest
+          .fn()
+          .mockResolvedValue([
+            { id: 'e1', userId: 'u1', courseId: 'c1', score: 80, progress: 100 },
+          ]),
         findCertificatesByUserIds: jest.fn().mockResolvedValue([
           {
             id: 'cert1',
@@ -73,12 +71,14 @@ describe('LearningGraphLoaders', () => {
             instructorId: 'i1',
           },
         ]),
-        findInstructorsByIds: jest.fn().mockResolvedValue([
-          { id: 'i1', name: 'Instructor 1', bio: 'Bio', avatarUrl: null },
-        ]),
-        findModulesByCourseIds: jest.fn().mockResolvedValue([
-          { id: 'm1', courseId: 'c1', title: 'Mod 1', content: 'Cont', orderIndex: 0 },
-        ]),
+        findInstructorsByIds: jest
+          .fn()
+          .mockResolvedValue([{ id: 'i1', name: 'Instructor 1', bio: 'Bio', avatarUrl: null }]),
+        findModulesByCourseIds: jest
+          .fn()
+          .mockResolvedValue([
+            { id: 'm1', courseId: 'c1', title: 'Mod 1', content: 'Cont', orderIndex: 0 },
+          ]),
       };
 
       const factory = new RecordingBatchLoaderFactory();
