@@ -30,8 +30,12 @@ const main = async (): Promise<void> => {
   loadEnvFile();
   const config = loadConfig();
 
-  process.stdout.write(`\n🚀 Iniciando Benchmark do Dashboard BFF (Execuções por abordagem: ${runs})\n`);
-  process.stdout.write(`Ambiente: Node ${process.version} | MySQL 8 | Dataset: 1.000 usuários, 5.000 matrículas\n\n`);
+  process.stdout.write(
+    `\n🚀 Iniciando Benchmark do Dashboard BFF (Execuções por abordagem: ${runs})\n`,
+  );
+  process.stdout.write(
+    `Ambiente: Node ${process.version} | MySQL 8 | Dataset: 1.000 usuários, 5.000 matrículas\n\n`,
+  );
 
   const logger = createLogger({ ...config.log, level: 'warn' });
   const container = buildContainer(config, logger);
@@ -102,6 +106,7 @@ const main = async (): Promise<void> => {
     const bffRaw = approaches[1]?.bytes.raw ?? 0;
     const bffReduction = approaches[1]?.reductionVsBaseline.raw ?? 0;
     const bffTime = approaches[1]?.timeMs.median ?? 0;
+    const bffQueries = approaches[1]?.dbQueries ?? 0;
     const gqlRaw = approaches[2]?.bytes.raw ?? 0;
     const gqlGzip = approaches[2]?.bytes.gzip ?? 0;
     const gqlReduction = approaches[2]?.reductionVsBaseline.raw ?? 0;
@@ -125,7 +130,7 @@ ${markdownTable}
 
 2. **REST BFF (\`GET /api/v2/dashboard\`)**:
    - Aplica projeção SQL direta (\`SELECT id, name, total_score, avatar_url\`) atendendo exatamente às 3 propriedades exigidas pelo card da interface.
-   - Reduz o payload em **${bffReduction}x** (${formatBytes(bffRaw)}) e responde em apenas ${bffTime}ms com **1 única query SQL**.
+   - Reduz o payload em **${bffReduction}x** (${formatBytes(bffRaw)}) e responde em apenas ${bffTime}ms com **${bffQueries} queries SQL** (projeção + \`COUNT\` da paginação).
 
 3. **GraphQL com DataLoader (\`POST /graphql\`)**:
    - Permite que o cliente declare estritamente os campos necessários via Field Selection AST.
@@ -144,7 +149,7 @@ ${markdownTable}
 
 main().catch((error: unknown) => {
   process.stderr.write(
-    `Benchmark failed: ${error instanceof Error ? error.stack ?? error.message : String(error)}\n`,
+    `Benchmark failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`,
   );
   process.exitCode = 1;
 });

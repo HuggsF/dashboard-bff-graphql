@@ -20,7 +20,7 @@ Dataset de teste: SPEC (1.000 usuários, 50 instrutores, 200 cursos, 1.000 módu
 
 2. **REST BFF (`GET /api/v2/dashboard`)**:
    - Aplica projeção SQL direta (`SELECT id, name, total_score, avatar_url`) atendendo exatamente às 3 propriedades exigidas pelo card da interface.
-   - Reduz o payload em **3541.9x** (2.6 KB) e responde em apenas 5.6ms com **1 única query SQL**.
+   - Reduz o payload em **3541.9x** (2.6 KB) e responde em apenas 5.6ms com **2 queries SQL** (projeção + `COUNT` da paginação).
 
 3. **GraphQL com DataLoader (`POST /graphql`)**:
    - Permite que o cliente declare estritamente os campos necessários via Field Selection AST.

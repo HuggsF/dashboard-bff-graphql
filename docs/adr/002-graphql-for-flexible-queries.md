@@ -31,12 +31,12 @@ Creating a distinct REST BFF endpoint for every screen variation would lead to e
 
 ## Decision Outcome
 
-We decided to adopt **GraphQL (Apollo Server v4)** alongside the REST endpoints:
+We decided to adopt **GraphQL (Apollo Server 5)** alongside the REST endpoints:
 
 1. **Selection-Driven Application Use Case**: The `GetDashboardGraphQLUseCase` accepts an array of requested fields derived from the GraphQL AST (`info.fieldNodes`). SQL queries are dynamic down to only the requested columns.
-2. **Relay-Style Keyset Pagination**: Implemented `DashboardConnection` with `DashboardEdge` (`cursor`, `node`), `PageInfo` (`hasNextPage`, `endCursor`), and `totalCount`. Cursors are encoded using composite index keys (`totalScore` + `id`), providing stable $O(1)$ database index seeks without OFFSET degradation.
+2. **Relay-Style Keyset Pagination**: Implemented `DashboardConnection` with `DashboardEdge` (`cursor`, `node`), `PageInfo` (`hasNextPage`, `endCursor`), and `totalCount`. Cursors encode the `(totalScore, id)` of the last entry seen; the next page is selected with a keyset predicate (`HAVING total_score < ? OR (total_score = ? AND id > ?)`), so page boundaries stay stable when rows are inserted between requests. Because `totalScore` is an aggregate, MySQL still computes the ranking for every page — a materialized score column (or summary table) would be required for true index seeks.
 3. **Strict Query Protection**: 
-   - Configured query depth limiting (`createDepthLimitRule(maxDepth = 6)`) to prevent recursive query attacks (e.g., `user -> enrollments -> course -> modules -> course -> ...`).
+   - Configured query depth limiting (`createDepthLimitRule`, default depth 8, configurable via `GRAPHQL_MAX_DEPTH`) to prevent recursive query attacks (e.g., `user -> enrollments -> course -> modules -> course -> ...`).
    - Disabled introspection and landing page in production environments.
 4. **Result Pattern Integration**: Resolvers delegate directly to application use cases returning `Result<T, E>`. Domain/Application errors are mapped to RFC-compliant GraphQL errors (`BAD_USER_INPUT`, `INTERNAL_SERVER_ERROR`) with sanitized messages.
 
